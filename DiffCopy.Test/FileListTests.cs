@@ -37,6 +37,7 @@ public class FileListTests
         Directory.Delete(Path.Combine(testDir, "1"));
         Directory.Delete(Path.Combine(testDir, "2"));
         Directory.Delete(Path.Combine(testDir, "3"));
+        File.Delete(Path.Combine(Directory.GetCurrentDirectory(), "filelist.txt"));
     }
 
     [Test]
@@ -67,5 +68,29 @@ public class FileListTests
         Assert.AreEqual(2, diff.Count);
         Assert.AreEqual("f4", diff[0]);
         Assert.AreEqual("f5", diff[1]);
+    }
+
+    [Test]
+    public void TestWrite()
+    {
+        var testDir = Path.Combine(Directory.GetCurrentDirectory(), "test");
+        FileList fileList = new ();
+        fileList.GenerateFileList(testDir);
+        var fileListTxt = Path.Combine(Directory.GetCurrentDirectory(), "filelist.txt");
+        fileList.Write(fileListTxt);
+        Assert.IsTrue(File.Exists(fileListTxt));
+    }
+
+    [Test]
+    public void TestRead()
+    {
+        TestWrite();
+        var fileListTxt = Path.Combine(Directory.GetCurrentDirectory(), "filelist.txt");
+        FileList fileList = new ();
+        var successful = fileList.Read(fileListTxt);
+        Assert.True(successful);
+        Assert.True(fileList.FilePaths.Contains("/Users/chris/Development/DiffCopy/DiffCopy.Test/bin/Debug/net7.0/test/1/file2.txt"));
+        Assert.True(fileList.FilePaths.Contains("/Users/chris/Development/DiffCopy/DiffCopy.Test/bin/Debug/net7.0/test/1/file3.txt"));
+        Assert.True(fileList.FilePaths.Contains("/Users/chris/Development/DiffCopy/DiffCopy.Test/bin/Debug/net7.0/test/2/file6.txt"));
     }
 }
