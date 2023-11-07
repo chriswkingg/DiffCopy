@@ -52,4 +52,12 @@ public class CopyEngineTests
         // Clean up
         File.Delete(dest);
     }
+
+    [Test]
+    public void TestRemoveRoot()
+    {
+        var srcRoot = Path.Combine(Directory.GetCurrentDirectory(), "test");
+        var rootless = CopyEngine.RemoveRoot(Path.Combine(Directory.GetCurrentDirectory(), "test", "1", "file1.txt"), srcRoot);
+        Assert.AreEqual("1/file1.txt", rootless);
+    }
 }
