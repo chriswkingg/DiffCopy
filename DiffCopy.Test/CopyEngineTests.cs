@@ -75,7 +75,7 @@ public class CopyEngineTests
         var srcpath = Path.Combine(Directory.GetCurrentDirectory(), "test");
         var destpath = Path.Combine(Directory.GetCurrentDirectory(), "test2");
 
-        FileList fe = new FileList();
+        var fe = new FileList();
         fe.GenerateFileList(srcpath);
         
         CopyEngine ce = new CopyEngine
