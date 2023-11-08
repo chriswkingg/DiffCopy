@@ -8,20 +8,28 @@ public class CopyEngineTests
     [OneTimeSetUp]
     public void GenerateTestFileStructure()
     {
+        FileStream fs;
         var testDir = Path.Combine(Directory.GetCurrentDirectory(), "test");
         Directory.CreateDirectory(Path.Combine(testDir, "1"));
         Directory.CreateDirectory(Path.Combine(testDir, "2"));
         Directory.CreateDirectory(Path.Combine(testDir, "3"));
         // Apparently file.create keeps files open, this causes problems for TestCopyFile()
-        var fs = File.Create(Path.Combine(testDir, "1", "file1.txt"));
+        fs = File.Create(Path.Combine(testDir, "1", "file1.txt"));
         fs.Close();
-        File.Create(Path.Combine(testDir, "1", "file2.txt"));
-        File.Create(Path.Combine(testDir, "1", "file3.txt"));
-        File.Create(Path.Combine(testDir, "2", "file4.txt"));
-        File.Create(Path.Combine(testDir, "2", "file5.txt"));
-        File.Create(Path.Combine(testDir, "2", "file6.txt"));
-        File.Create(Path.Combine(testDir, "3", "file7.txt"));
-        File.Create(Path.Combine(testDir, "3", "file8.txt"));
+        fs = File.Create(Path.Combine(testDir, "1", "file2.txt"));
+        fs.Close();
+        fs = File.Create(Path.Combine(testDir, "1", "file3.txt"));
+        fs.Close();
+        fs = File.Create(Path.Combine(testDir, "2", "file4.txt"));
+        fs.Close();
+        fs = File.Create(Path.Combine(testDir, "2", "file5.txt"));
+        fs.Close();
+        fs = File.Create(Path.Combine(testDir, "2", "file6.txt"));
+        fs.Close();
+        fs = File.Create(Path.Combine(testDir, "3", "file7.txt"));
+        fs.Close();
+        fs = File.Create(Path.Combine(testDir, "3", "file8.txt"));
+        fs.Close();
     }
     
     [OneTimeTearDown]
@@ -58,6 +66,53 @@ public class CopyEngineTests
     {
         var srcRoot = Path.Combine(Directory.GetCurrentDirectory(), "test");
         var rootless = CopyEngine.RemoveRoot(Path.Combine(Directory.GetCurrentDirectory(), "test", "1", "file1.txt"), srcRoot);
-        Assert.AreEqual("1/file1.txt", rootless);
+        Assert.AreEqual("/1/file1.txt", rootless);
+    }
+
+    [Test]
+    public void TestCopyEngine()
+    {
+        var srcpath = Path.Combine(Directory.GetCurrentDirectory(), "test");
+        var destpath = Path.Combine(Directory.GetCurrentDirectory(), "test2");
+
+        FileList fe = new FileList();
+        fe.GenerateFileList(srcpath);
+        
+        CopyEngine ce = new CopyEngine
+        {
+            FileList = fe,
+            RootSrc = srcpath,
+            RootDest = destpath
+        };
+
+        ce.Start();
+        
+        Thread.Sleep(1000);
+        
+        // Did the files copy?
+        Assert.True(File.Exists(Path.Combine(destpath, "1", "file1.txt")));
+        Assert.True(File.Exists(Path.Combine(destpath, "1", "file2.txt")));
+        Assert.True(File.Exists(Path.Combine(destpath, "1", "file3.txt")));
+        Assert.True(File.Exists(Path.Combine(destpath, "2", "file4.txt")));
+        Assert.True(File.Exists(Path.Combine(destpath, "2", "file5.txt")));
+        Assert.True(File.Exists(Path.Combine(destpath, "2", "file6.txt")));
+        Assert.True(File.Exists(Path.Combine(destpath, "3", "file7.txt")));
+        Assert.True(File.Exists(Path.Combine(destpath, "3", "file8.txt")));
+        
+        
+        // Cleanup
+        var testDir = Path.Combine(Directory.GetCurrentDirectory(), "test2");
+        File.Delete(Path.Combine(testDir, "1", "file1.txt"));
+        File.Delete(Path.Combine(testDir, "1", "file2.txt"));
+        File.Delete(Path.Combine(testDir, "1", "file3.txt"));
+        File.Delete(Path.Combine(testDir, "2", "file4.txt"));
+        File.Delete(Path.Combine(testDir, "2", "file5.txt"));
+        File.Delete(Path.Combine(testDir, "2", "file6.txt"));
+        File.Delete(Path.Combine(testDir, "3", "file7.txt"));
+        File.Delete(Path.Combine(testDir, "3", "file8.txt"));
+        Directory.Delete(Path.Combine(testDir, "1"));
+        Directory.Delete(Path.Combine(testDir, "2"));
+        Directory.Delete(Path.Combine(testDir, "3"));
+        File.Delete(Path.Combine(Directory.GetCurrentDirectory(), "filelist.txt"));
     }
 }

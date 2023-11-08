@@ -3,7 +3,7 @@ namespace DiffCopy;
 public class CopyEngine
 {
     public FileList FileList { get; init; }
-    private object FileListLock;
+    private object FileListLock = new ();
     public string? RootSrc { get; init; }
     public string? RootDest { get; init; }
     public bool Running { get; private set; } = false;
@@ -20,7 +20,7 @@ public class CopyEngine
     public void Stop()
     {
         Running = false;
-        StopThreads();
+        StopThreads();  
     }
 
     private void StartThreads()
@@ -50,6 +50,11 @@ public class CopyEngine
             var srcPath = "";
             lock (FileListLock)
             {
+                if (FileList.FilePaths.Count == 0)
+                {
+                    Running = false;
+                    return;
+                }
                 srcPath = FileList.FilePaths[0];
                 FileList.FilePaths.RemoveAt(0);
             }
@@ -66,5 +71,5 @@ public class CopyEngine
     }
 
     // *somewhat* dangerous
-    public static string RemoveRoot(string path, string root) => path[(root.Length + 1)..];
+    public static string RemoveRoot(string path, string root) => path[(root.Length)..];
 }
