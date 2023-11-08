@@ -25,20 +25,20 @@ public class CopyEngine
 
     private void StartThreads()
     {
-        while (Running)
+        for (var i = 0; i < ThreadCount; i++)
         {
-            for(var i = 0; i < ThreadCount; i++)
-            {
-                WorkerThreads[i] = new Thread(CopyWorker);
-                WorkerThreads[i]?.Start();
-            }
+            WorkerThreads[i] = new Thread(CopyWorker);
+            Console.WriteLine($"Created thread {WorkerThreads[i]?.ManagedThreadId}");
+            WorkerThreads[i]?.Start();
         }
+        
     }
 
     private void StopThreads()
     {
         for (var i = 0; i < ThreadCount; i++)
         {
+            Console.WriteLine($"Waiting for thread {WorkerThreads[i]?.ManagedThreadId}");
             WorkerThreads[i]?.Join();
         }
     }
@@ -53,13 +53,14 @@ public class CopyEngine
                 if (FileList.FilePaths.Count == 0)
                 {
                     Running = false;
+                    Console.WriteLine($"No work remaining thread: {Environment.CurrentManagedThreadId}, exiting");
                     return;
                 }
                 srcPath = FileList.FilePaths[0];
                 FileList.FilePaths.RemoveAt(0);
             }
-
             var destPath = RootDest + RemoveRoot(srcPath, RootSrc);
+            Console.WriteLine($"Thread: {Environment.CurrentManagedThreadId} Copying File: {srcPath} to {destPath}");
             CopyFile(srcPath, destPath);
         }
     }
