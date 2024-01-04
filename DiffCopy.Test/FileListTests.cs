@@ -65,9 +65,9 @@ public class FileListTests
         fileList2.FilePaths.Add("f5");
         
         var diff = fileList2.GenerateDiff(fileList1);
-        Assert.AreEqual(2, diff.Count);
-        Assert.AreEqual("f4", diff[0]);
-        Assert.AreEqual("f5", diff[1]);
+        Assert.AreEqual(2, diff.FilePaths.Count);
+        Assert.AreEqual("f4", diff.FilePaths[0]);
+        Assert.AreEqual("f5", diff.FilePaths[1]);
     }
 
     [Test]

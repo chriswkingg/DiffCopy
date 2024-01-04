@@ -3,7 +3,19 @@ namespace DiffCopy;
 
 public class FileList
 {
+    // TODO: This should be private, make helper methods for needed functions such as isEmpty()
     public readonly List<string> FilePaths = new List<string>();
+
+    private FileList(List<string> filesPaths)
+    {
+        FilePaths = filesPaths;
+    }
+
+    public FileList()
+    {
+        
+    }
+    
     public void GenerateFileList(string root)
     {
         GenerateFileList(root, FilePaths);
@@ -18,8 +30,7 @@ public class FileList
 
         fileList.AddRange(Directory.GetFiles(root));
     }
-
-    public List<string> GenerateDiff(FileList other) => FilePaths.Except(other.FilePaths).ToList();
+    public FileList GenerateDiff(FileList other) => new FileList(FilePaths.Except(other.FilePaths).ToList());
 
     public void Write(string path)
     {
