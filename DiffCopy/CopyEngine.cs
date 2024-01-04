@@ -2,7 +2,7 @@ namespace DiffCopy;
 
 public class CopyEngine
 {
-    public required FileList FileList { get; init; }
+    public required FileList? FileList { get; init; }
     private readonly object _fileListLock = new ();
     public required string RootSrc { get; init; }
     public required string RootDest { get; init; }
