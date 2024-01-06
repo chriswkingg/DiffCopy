@@ -89,8 +89,8 @@ public class FileListTests
         FileList fileList = new ();
         var successful = fileList.Read(fileListTxt);
         Assert.True(successful);
-        Assert.True(fileList.FilePaths.Contains("/Users/chris/Development/DiffCopy/DiffCopy.Test/bin/Debug/net7.0/test/1/file2.txt"));
-        Assert.True(fileList.FilePaths.Contains("/Users/chris/Development/DiffCopy/DiffCopy.Test/bin/Debug/net7.0/test/1/file3.txt"));
-        Assert.True(fileList.FilePaths.Contains("/Users/chris/Development/DiffCopy/DiffCopy.Test/bin/Debug/net7.0/test/2/file6.txt"));
+        Assert.True(fileList.FilePaths.Contains(Path.Combine(Directory.GetCurrentDirectory(), "test", "1", "file2.txt")));
+        Assert.True(fileList.FilePaths.Contains(Path.Combine(Directory.GetCurrentDirectory(), "test", "1", "file3.txt")));
+        Assert.True(fileList.FilePaths.Contains(Path.Combine(Directory.GetCurrentDirectory(), "test", "2", "file6.txt")));
     }
 }
