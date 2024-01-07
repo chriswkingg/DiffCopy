@@ -93,4 +93,15 @@ public class FileListTests
         Assert.True(fileList.FilePaths.Contains(Path.Combine(Directory.GetCurrentDirectory(), "test", "1", "file3.txt")));
         Assert.True(fileList.FilePaths.Contains(Path.Combine(Directory.GetCurrentDirectory(), "test", "2", "file6.txt")));
     }
+
+    [Test]
+    public void TestRemoveRoot()
+    {
+        var testDir = Path.Combine(Directory.GetCurrentDirectory(), "test");
+        FileList fileList = new FileList();
+        fileList.GenerateFileList(testDir);
+        fileList.RemoveRoot();
+        Assert.Contains("3/file7.txt", fileList.FilePaths);
+        Assert.Contains("1/file1.txt", fileList.FilePaths);
+    }
 }
