@@ -5,6 +5,7 @@ public class FileList
 {
     // TODO: This should be private, make helper methods for needed functions such as isEmpty()
     public readonly List<string> FilePaths = new List<string>();
+    public string Root { get; private set; }
 
     private FileList(List<string> filesPaths)
     {
@@ -18,6 +19,8 @@ public class FileList
     
     public void GenerateFileList(string root)
     {
+        // Temporary until file list refactoring
+        Root = root;
         GenerateFileList(root, FilePaths);
     }
 
@@ -51,5 +54,14 @@ public class FileList
         }
 
         return true;
+    }
+
+    public void RemoveRoot()
+    {
+        for(var i = 0; i < FilePaths.Count; i++)
+        {
+            // Is this a bad idea?? maybe!
+            FilePaths[i] = FilePaths[i].Substring(Root.Length + 1, FilePaths[i].Length - Root.Length - 1);
+        }
     }
 }
