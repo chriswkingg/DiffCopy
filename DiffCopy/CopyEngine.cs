@@ -56,8 +56,8 @@ public class CopyEngine
                     Console.WriteLine($"No work remaining thread: {Environment.CurrentManagedThreadId}, exiting");
                     return;
                 }
-                srcPath = FileList.FilePaths[0];
-                FileList.FilePaths.RemoveAt(0);
+
+                srcPath = FileList.NextPath();
             }
             var destPath = RootDest + RemoveRoot(srcPath, RootSrc);
             Console.WriteLine($"Thread: {Environment.CurrentManagedThreadId} Copying File: {srcPath} to {destPath}");
