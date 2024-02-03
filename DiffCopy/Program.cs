@@ -45,7 +45,7 @@ public static class Program
         
         ce = new CopyEngine
         {
-            FileList = ExistingSourceList.GenerateDiff(ExistingDestList),
+            FileList = GeneratedSourceList.GenerateDiff(GeneratedDestList),
             RootSrc = source,
             RootDest = dest
         };
@@ -62,10 +62,13 @@ public static class Program
             switch (parameters[0])
             {
                 case "start":
+                    ce.Start();
                     break;
                 case "stop":
-                    // Save copy state
+                    ce.Stop();
                     break;
+                case "exit":
+                    return;
             }
             
         }
