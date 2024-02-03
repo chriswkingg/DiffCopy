@@ -47,7 +47,7 @@ public class CopyEngine
     {
         while (Running)
         {
-            string srcPath;
+            string rootlessPath;
             lock (_fileListLock)
             {
                 if (FileList.FilePaths.Count == 0)
@@ -57,9 +57,11 @@ public class CopyEngine
                     return;
                 }
 
-                srcPath = FileList.NextPath();
+                rootlessPath = FileList.NextPath();
             }
-            var destPath = RootDest + RemoveRoot(srcPath, RootSrc);
+
+            var srcPath = Path.Combine(RootSrc, rootlessPath);
+            var destPath = Path.Combine(RootDest, rootlessPath);
             Console.WriteLine($"Thread: {Environment.CurrentManagedThreadId} Copying File: {srcPath} to {destPath}");
             CopyFile(srcPath, destPath);
         }
@@ -70,7 +72,4 @@ public class CopyEngine
         Directory.CreateDirectory(destParent?.ToString() ?? throw new InvalidOperationException());
         File.Copy(src, dest, true);
     }
-
-    // *somewhat* dangerous
-    public static string RemoveRoot(string path, string root) => path[(root.Length)..];
 }

@@ -38,6 +38,7 @@ public class FileListTests
         Directory.Delete(Path.Combine(testDir, "2"));
         Directory.Delete(Path.Combine(testDir, "3"));
         File.Delete(Path.Combine(Directory.GetCurrentDirectory(), "filelist.txt"));
+        Directory.Delete(testDir);
     }
 
     [Test]
@@ -48,7 +49,7 @@ public class FileListTests
         fileList.GenerateFileList();
         Assert.AreEqual(8, fileList.FilePaths.Count);
         // Contains only works for ICollection and a readonly list or readonly collection isnt an ICollection?
-        Assert.Contains(Path.Combine(testDir, "3/file1.txt"), fileList.FilePaths.ToList());
+        Assert.Contains(Path.Combine("3", "file1.txt"), fileList.FilePaths.ToList());
     }
 
     [Test]
@@ -56,10 +57,8 @@ public class FileListTests
     {
         var fileList1 = new FileList(Path.Combine(Directory.GetCurrentDirectory(), "test", "1"));
         fileList1.GenerateFileList();
-        fileList1.RemoveRoots();
         var fileList2 = new FileList(Path.Combine(Directory.GetCurrentDirectory(), "test", "3"));
         fileList2.GenerateFileList();
-        fileList2.RemoveRoots();
         
         var diff = fileList2.GenerateDiff(fileList1);
         Assert.AreEqual(1, diff.FilePaths.Count);
@@ -85,18 +84,18 @@ public class FileListTests
         FileList fileList = new (Path.Combine(Directory.GetCurrentDirectory()));
         var successful = fileList.Read(fileListTxt);
         Assert.True(successful);
-        Assert.True(fileList.FilePaths.Contains(Path.Combine(Directory.GetCurrentDirectory(), "test", "1", "file2.txt")));
-        Assert.True(fileList.FilePaths.Contains(Path.Combine(Directory.GetCurrentDirectory(), "test", "1", "file3.txt")));
-        Assert.True(fileList.FilePaths.Contains(Path.Combine(Directory.GetCurrentDirectory(), "test", "2", "file6.txt")));
+        Assert.True(fileList.FilePaths.Contains(Path.Combine("1", "file2.txt")));
+        Assert.True(fileList.FilePaths.Contains(Path.Combine("1", "file3.txt")));
+        Assert.True(fileList.FilePaths.Contains(Path.Combine("2", "file6.txt")));
     }
 
     [Test]
+    // Redundant - To be removed
     public void TestRemoveRoot()
     {
         var testDir = Path.Combine(Directory.GetCurrentDirectory(), "test");
         FileList fileList = new FileList(testDir);
         fileList.GenerateFileList();
-        fileList.RemoveRoots();
         Assert.Contains("3/file1.txt", fileList.FilePaths.ToList());
         Assert.Contains("1/file1.txt", fileList.FilePaths.ToList());
     }

@@ -26,7 +26,7 @@ public class CopyEngineTests
         fs.Close();
         fs = File.Create(Path.Combine(testDir, "2", "file6.txt"));
         fs.Close();
-        fs = File.Create(Path.Combine(testDir, "3", "file7.txt"));
+        fs = File.Create(Path.Combine(testDir, "3", "file1.txt"));
         fs.Close();
         fs = File.Create(Path.Combine(testDir, "3", "file8.txt"));
         fs.Close();
@@ -42,12 +42,13 @@ public class CopyEngineTests
         File.Delete(Path.Combine(testDir, "2", "file4.txt"));
         File.Delete(Path.Combine(testDir, "2", "file5.txt"));
         File.Delete(Path.Combine(testDir, "2", "file6.txt"));
-        File.Delete(Path.Combine(testDir, "3", "file7.txt"));
+        File.Delete(Path.Combine(testDir, "3", "file1.txt"));
         File.Delete(Path.Combine(testDir, "3", "file8.txt"));
         Directory.Delete(Path.Combine(testDir, "1"));
         Directory.Delete(Path.Combine(testDir, "2"));
         Directory.Delete(Path.Combine(testDir, "3"));
         File.Delete(Path.Combine(Directory.GetCurrentDirectory(), "filelist.txt"));
+        Directory.Delete(testDir);
     }
     
     [Test]
@@ -61,13 +62,14 @@ public class CopyEngineTests
         File.Delete(dest);
     }
 
-    [Test]
-    public void TestRemoveRoot()
-    {
-        var srcRoot = Path.Combine(Directory.GetCurrentDirectory(), "test");
-        var rootless = CopyEngine.RemoveRoot(Path.Combine(Directory.GetCurrentDirectory(), "test", "1", "file1.txt"), srcRoot);
-        Assert.AreEqual("/1/file1.txt", rootless);
-    }
+    // Doesnt belong here
+    // [Test]
+    // public void TestRemoveRoot()
+    // {
+    //     var srcRoot = Path.Combine(Directory.GetCurrentDirectory(), "test");
+    //     var rootless = CopyEngine.RemoveRoot(Path.Combine(Directory.GetCurrentDirectory(), "test", "1", "file1.txt"), srcRoot);
+    //     Assert.AreEqual("/1/file1.txt", rootless);
+    // }
 
     [Test]
     public void TestCopyEngine()
@@ -96,23 +98,23 @@ public class CopyEngineTests
         Assert.True(File.Exists(Path.Combine(destpath, "2", "file4.txt")));
         Assert.True(File.Exists(Path.Combine(destpath, "2", "file5.txt")));
         Assert.True(File.Exists(Path.Combine(destpath, "2", "file6.txt")));
-        Assert.True(File.Exists(Path.Combine(destpath, "3", "file7.txt")));
+        Assert.True(File.Exists(Path.Combine(destpath, "3", "file1.txt")));
         Assert.True(File.Exists(Path.Combine(destpath, "3", "file8.txt")));
         
         
-        // Cleanup
-        var testDir = Path.Combine(Directory.GetCurrentDirectory(), "test2");
-        File.Delete(Path.Combine(testDir, "1", "file1.txt"));
-        File.Delete(Path.Combine(testDir, "1", "file2.txt"));
-        File.Delete(Path.Combine(testDir, "1", "file3.txt"));
-        File.Delete(Path.Combine(testDir, "2", "file4.txt"));
-        File.Delete(Path.Combine(testDir, "2", "file5.txt"));
-        File.Delete(Path.Combine(testDir, "2", "file6.txt"));
-        File.Delete(Path.Combine(testDir, "3", "file7.txt"));
-        File.Delete(Path.Combine(testDir, "3", "file8.txt"));
-        Directory.Delete(Path.Combine(testDir, "1"));
-        Directory.Delete(Path.Combine(testDir, "2"));
-        Directory.Delete(Path.Combine(testDir, "3"));
+        // Cleanup for this specific test
+        File.Delete(Path.Combine(destpath, "1", "file1.txt"));
+        File.Delete(Path.Combine(destpath, "1", "file2.txt"));
+        File.Delete(Path.Combine(destpath, "1", "file3.txt"));
+        File.Delete(Path.Combine(destpath, "2", "file4.txt"));
+        File.Delete(Path.Combine(destpath, "2", "file5.txt"));
+        File.Delete(Path.Combine(destpath, "2", "file6.txt"));
+        File.Delete(Path.Combine(destpath, "3", "file1.txt"));
+        File.Delete(Path.Combine(destpath, "3", "file8.txt"));
+        Directory.Delete(Path.Combine(destpath, "1"));
+        Directory.Delete(Path.Combine(destpath, "2"));
+        Directory.Delete(Path.Combine(destpath, "3"));
         File.Delete(Path.Combine(Directory.GetCurrentDirectory(), "filelist.txt"));
+        Directory.Delete(destpath);
     }
 }

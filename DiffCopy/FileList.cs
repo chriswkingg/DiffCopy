@@ -21,6 +21,7 @@ public class FileList
     public void GenerateFileList()
     {
         GenerateFileList(Root, _filePaths);
+        RemoveRoots();
     }
 
     private static void GenerateFileList(string root, List<string> fileList)
@@ -36,7 +37,8 @@ public class FileList
 
     public void Write(string path)
     {
-        using StreamWriter file = (File.Exists(path)) ? File.AppendText(path) : File.CreateText(path);
+        // We should not append to this file, ALWAYS load first and rewrite if needed
+        using StreamWriter file = File.CreateText(path);
         foreach (var i in _filePaths)
         {
             file.WriteLine(i);
@@ -55,7 +57,7 @@ public class FileList
         return true;
     }
 
-    public void RemoveRoots()
+    private void RemoveRoots()
     {
         for(var i = 0; i < _filePaths.Count; i++)
         {
