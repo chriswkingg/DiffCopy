@@ -2,13 +2,13 @@ namespace DiffCopy;
 
 public class CopyEngine
 {
-    public required FileList? FileList { get; init; }
+    public required FileList FileList { get; init; }
     private readonly object _fileListLock = new ();
     public required string RootSrc { get; init; }
     public required string RootDest { get; init; }
     public bool Running { get; private set; }
 
-    public const int ThreadCount = 1;
+    private const int ThreadCount = 1;
     private Thread?[] WorkerThreads { get; set; } = new Thread?[ThreadCount];
 
     public void Start()

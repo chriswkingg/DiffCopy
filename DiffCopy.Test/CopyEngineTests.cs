@@ -8,13 +8,12 @@ public class CopyEngineTests
     [OneTimeSetUp]
     public void GenerateTestFileStructure()
     {
-        FileStream fs;
         var testDir = Path.Combine(Directory.GetCurrentDirectory(), "test");
         Directory.CreateDirectory(Path.Combine(testDir, "1"));
         Directory.CreateDirectory(Path.Combine(testDir, "2"));
         Directory.CreateDirectory(Path.Combine(testDir, "3"));
         // Apparently file.create keeps files open, this causes problems for TestCopyFile()
-        fs = File.Create(Path.Combine(testDir, "1", "file1.txt"));
+        var fs = File.Create(Path.Combine(testDir, "1", "file1.txt"));
         fs.Close();
         fs = File.Create(Path.Combine(testDir, "1", "file2.txt"));
         fs.Close();
@@ -74,17 +73,17 @@ public class CopyEngineTests
     [Test]
     public void TestCopyEngine()
     {
-        var srcpath = Path.Combine(Directory.GetCurrentDirectory(), "test");
-        var destpath = Path.Combine(Directory.GetCurrentDirectory(), "test2");
+        var srcPath = Path.Combine(Directory.GetCurrentDirectory(), "test");
+        var destPath = Path.Combine(Directory.GetCurrentDirectory(), "test2");
 
-        var fe = new FileList(srcpath);
+        var fe = new FileList(srcPath);
         fe.GenerateFileList();
         
         CopyEngine ce = new CopyEngine
         {
             FileList = fe,
-            RootSrc = srcpath,
-            RootDest = destpath
+            RootSrc = srcPath,
+            RootDest = destPath
         };
 
         ce.Start();
@@ -92,29 +91,29 @@ public class CopyEngineTests
         Thread.Sleep(1000);
         
         // Did the files copy?
-        Assert.True(File.Exists(Path.Combine(destpath, "1", "file1.txt")));
-        Assert.True(File.Exists(Path.Combine(destpath, "1", "file2.txt")));
-        Assert.True(File.Exists(Path.Combine(destpath, "1", "file3.txt")));
-        Assert.True(File.Exists(Path.Combine(destpath, "2", "file4.txt")));
-        Assert.True(File.Exists(Path.Combine(destpath, "2", "file5.txt")));
-        Assert.True(File.Exists(Path.Combine(destpath, "2", "file6.txt")));
-        Assert.True(File.Exists(Path.Combine(destpath, "3", "file1.txt")));
-        Assert.True(File.Exists(Path.Combine(destpath, "3", "file8.txt")));
+        Assert.True(File.Exists(Path.Combine(destPath, "1", "file1.txt")));
+        Assert.True(File.Exists(Path.Combine(destPath, "1", "file2.txt")));
+        Assert.True(File.Exists(Path.Combine(destPath, "1", "file3.txt")));
+        Assert.True(File.Exists(Path.Combine(destPath, "2", "file4.txt")));
+        Assert.True(File.Exists(Path.Combine(destPath, "2", "file5.txt")));
+        Assert.True(File.Exists(Path.Combine(destPath, "2", "file6.txt")));
+        Assert.True(File.Exists(Path.Combine(destPath, "3", "file1.txt")));
+        Assert.True(File.Exists(Path.Combine(destPath, "3", "file8.txt")));
         
         
         // Cleanup for this specific test
-        File.Delete(Path.Combine(destpath, "1", "file1.txt"));
-        File.Delete(Path.Combine(destpath, "1", "file2.txt"));
-        File.Delete(Path.Combine(destpath, "1", "file3.txt"));
-        File.Delete(Path.Combine(destpath, "2", "file4.txt"));
-        File.Delete(Path.Combine(destpath, "2", "file5.txt"));
-        File.Delete(Path.Combine(destpath, "2", "file6.txt"));
-        File.Delete(Path.Combine(destpath, "3", "file1.txt"));
-        File.Delete(Path.Combine(destpath, "3", "file8.txt"));
-        Directory.Delete(Path.Combine(destpath, "1"));
-        Directory.Delete(Path.Combine(destpath, "2"));
-        Directory.Delete(Path.Combine(destpath, "3"));
+        File.Delete(Path.Combine(destPath, "1", "file1.txt"));
+        File.Delete(Path.Combine(destPath, "1", "file2.txt"));
+        File.Delete(Path.Combine(destPath, "1", "file3.txt"));
+        File.Delete(Path.Combine(destPath, "2", "file4.txt"));
+        File.Delete(Path.Combine(destPath, "2", "file5.txt"));
+        File.Delete(Path.Combine(destPath, "2", "file6.txt"));
+        File.Delete(Path.Combine(destPath, "3", "file1.txt"));
+        File.Delete(Path.Combine(destPath, "3", "file8.txt"));
+        Directory.Delete(Path.Combine(destPath, "1"));
+        Directory.Delete(Path.Combine(destPath, "2"));
+        Directory.Delete(Path.Combine(destPath, "3"));
         File.Delete(Path.Combine(Directory.GetCurrentDirectory(), "filelist.txt"));
-        Directory.Delete(destpath);
+        Directory.Delete(destPath);
     }
 }

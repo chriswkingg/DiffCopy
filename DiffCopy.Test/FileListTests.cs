@@ -48,7 +48,7 @@ public class FileListTests
         FileList fileList = new FileList(testDir);
         fileList.GenerateFileList();
         Assert.AreEqual(8, fileList.FilePaths.Count);
-        // Contains only works for ICollection and a readonly list or readonly collection isnt an ICollection?
+        // Contains only works for ICollection and a readonly list or readonly collection isn't an ICollection?
         Assert.Contains(Path.Combine("3", "file1.txt"), fileList.FilePaths.ToList());
     }
 
@@ -68,7 +68,6 @@ public class FileListTests
     [Test]
     public void TestWrite()
     {
-        var testDir = Path.Combine(Directory.GetCurrentDirectory(), "test");
         FileList fileList = new (Path.Combine(Directory.GetCurrentDirectory(), "test"));
         fileList.GenerateFileList();
         var fileListTxt = Path.Combine(Directory.GetCurrentDirectory(), "filelist.txt");
