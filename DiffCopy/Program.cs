@@ -15,11 +15,11 @@ public static class Program
         
         // Compare current file structure state to last recorded state of source
         // If different, exit
-        GeneratedSourceList = new FileList();
-        GeneratedSourceList.GenerateFileList(source);
+        GeneratedSourceList = new FileList(source);
+        GeneratedSourceList.GenerateFileList();
         if (File.Exists(Path.Combine(source, "filelist.txt")))
         {
-            ExistingSourceList = new FileList();
+            ExistingSourceList = new FileList(source);
             ExistingSourceList.Read(Path.Combine(source, "filelist.txt"));
             if (ExistingSourceList.GenerateDiff(GeneratedSourceList).FilePaths.Count == 0)
             {
@@ -30,11 +30,11 @@ public static class Program
 
         // Compare current file structure state to last recorded state of dest
         // If different, exit
-        GeneratedDestList = new FileList();
-        GeneratedDestList.GenerateFileList(dest);
+        GeneratedDestList = new FileList(dest);
+        GeneratedDestList.GenerateFileList();
         if (File.Exists(Path.Combine(dest, "filelist.txt")))
         {
-            ExistingDestList = new FileList();
+            ExistingDestList = new FileList(dest);
             ExistingDestList.Read(Path.Combine(source, "filelist.txt"));
             if (ExistingDestList.GenerateDiff(GeneratedDestList).FilePaths.Count == 0)
             {

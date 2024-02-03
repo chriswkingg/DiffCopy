@@ -2,13 +2,13 @@ namespace DiffCopy;
 
 public class CopyEngine
 {
-    public required FileList? FileList { get; init; }
+    public required FileList FileList { get; init; }
     private readonly object _fileListLock = new ();
     public required string RootSrc { get; init; }
     public required string RootDest { get; init; }
     public bool Running { get; private set; }
 
-    public const int ThreadCount = 1;
+    private const int ThreadCount = 1;
     private Thread?[] WorkerThreads { get; set; } = new Thread?[ThreadCount];
 
     public void Start()
@@ -47,7 +47,7 @@ public class CopyEngine
     {
         while (Running)
         {
-            string srcPath;
+            string rootlessPath;
             lock (_fileListLock)
             {
                 if (FileList.FilePaths.Count == 0)
@@ -56,10 +56,12 @@ public class CopyEngine
                     Console.WriteLine($"No work remaining thread: {Environment.CurrentManagedThreadId}, exiting");
                     return;
                 }
-                srcPath = FileList.FilePaths[0];
-                FileList.FilePaths.RemoveAt(0);
+
+                rootlessPath = FileList.NextPath();
             }
-            var destPath = RootDest + RemoveRoot(srcPath, RootSrc);
+
+            var srcPath = Path.Combine(RootSrc, rootlessPath);
+            var destPath = Path.Combine(RootDest, rootlessPath);
             Console.WriteLine($"Thread: {Environment.CurrentManagedThreadId} Copying File: {srcPath} to {destPath}");
             CopyFile(srcPath, destPath);
         }
@@ -70,7 +72,4 @@ public class CopyEngine
         Directory.CreateDirectory(destParent?.ToString() ?? throw new InvalidOperationException());
         File.Copy(src, dest, true);
     }
-
-    // *somewhat* dangerous
-    public static string RemoveRoot(string path, string root) => path[(root.Length)..];
 }
