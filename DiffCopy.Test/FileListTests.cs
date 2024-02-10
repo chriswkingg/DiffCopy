@@ -37,7 +37,7 @@ public class FileListTests
         Directory.Delete(Path.Combine(testDir, "1"));
         Directory.Delete(Path.Combine(testDir, "2"));
         Directory.Delete(Path.Combine(testDir, "3"));
-        File.Delete(Path.Combine(Directory.GetCurrentDirectory(), "filelist.txt"));
+        File.Delete(Path.Combine(testDir, "filelist.txt"));
         Directory.Delete(testDir);
     }
 
@@ -97,5 +97,15 @@ public class FileListTests
         fileList.GenerateFileList();
         Assert.Contains("3/file1.txt", fileList.FilePaths.ToList());
         Assert.Contains("1/file1.txt", fileList.FilePaths.ToList());
+    }
+
+    [Test]
+    public void TestRemoveFileList()
+    {
+        var testDir = Path.Combine(Directory.GetCurrentDirectory(), "test");
+        File.Create(Path.Combine(testDir, "filelist.txt"));
+        FileList fileList = new FileList(testDir);
+        fileList.GenerateFileList();
+        Assert.That(fileList.FilePaths, Has.No.Member("fileilst.txt"));
     }
 }
