@@ -22,6 +22,8 @@ public class FileList
     {
         GenerateFileList(Root, _filePaths);
         RemoveRoots();
+        // Dont want to copy file list
+        _filePaths.Remove("filelist.txt");
     }
 
     private static void GenerateFileList(string root, List<string> fileList)
